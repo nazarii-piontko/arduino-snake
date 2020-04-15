@@ -7,7 +7,7 @@ const int FIELD_WIDTH = 32;
 const int FIELD_HEIGHT = 8;
 
 /**
- * Next snake direction or direction of snake move
+ * Game field cell type.
  */
 typedef enum {
     CELL_TYPE_EMPTY,
@@ -17,7 +17,7 @@ typedef enum {
 } CELL_TYPE;
 
 /**
- * Next snake direction or direction of snake move
+ * Direction to snake next cell.
  */
 typedef enum {
     DIRECTION_LEFT,
@@ -26,11 +26,17 @@ typedef enum {
     DIRECTION_DOWN
 } DIRECTION;
 
+/**
+ * The result of game loop step.
+ */
 typedef enum {
     STEP_RESULT_SUCCESS,
     STEP_RESULT_FAIL
  } STEP_RESULT;
 
+/**
+ * Point coordinates.
+ */
 typedef struct Point {
     /**
      * X-coordinate: [0..FIELD_WIDTH].
@@ -46,6 +52,9 @@ typedef struct Point {
 
 #define POINT_IS_EQUAL(p1, p2) (p1.x == p2.x && p1.y == p2.y)
 
+/**
+ * Snake data container.
+ */
 typedef struct Snake {
     Point first_point;
     Point last_point;;
@@ -54,10 +63,10 @@ typedef struct Snake {
 /**
  * Cell data will be encoded in one byte by the following bit schema:
  * 2 bits - type of the cell, one of CELL_TYPE value.
- * Next bits depends on type of cell.
+ * Next bits depends on type of the cell.
  * - Snake cell:
- *  3 bits - next snake cell direction, one of DIRECTION value.
- *  3 bits - next snake cell direction, one of DIRECTION value.
+ *  2 bits - next cell direction, one of DIRECTION value.
+ *  The first snake cell contains direction for future step.
  */
 typedef byte Cell;
 
@@ -71,10 +80,16 @@ typedef byte Cell;
 
 #define GAME_CELL_GET_SNAKE_NEXT(cell) ((DIRECTION) (((cell) >> 2) & 0x03))
 
+/**
+ * Game field, contains only cells.
+ */
 typedef struct Field {
     Cell cells[FIELD_WIDTH][FIELD_HEIGHT];
 } Field;
 
+/**
+ * Game root struct.
+ */
 typedef struct Game {
     Field field;
     Snake snake;
@@ -82,12 +97,26 @@ typedef struct Game {
     short score;
 } Game;
 
+/**
+ * User input.
+ */
 typedef struct UserInput {
     DIRECTION next_move;
 } UserInput;
 
+/**
+ * Initialize game struct.
+ */
 void game_init(Game *game);
+
+/**
+ * Initialize game for next level.
+ */
 void game_prepare_level(Game *game);
+
+/**
+ * Handle next game loop step.
+ */
 STEP_RESULT game_handle_next_step(Game *game, UserInput *input);
 
 #endif
