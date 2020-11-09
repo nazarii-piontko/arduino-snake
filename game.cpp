@@ -1,5 +1,13 @@
 #include "game.h"
 
+#if defined(__EMSCRIPTEN__)
+
+long random(long max) {
+    return random() % max;
+}
+
+#endif
+
 void move_snake(Game *game, Point next_point);
 void increase_snake(Game *game, Point next_point);
 bool is_next_snake_point_allowed(Game *game, Point point);
@@ -9,14 +17,14 @@ void set_snake_direction(Game *game, DIRECTION direction);
 void generate_food(Game *game);
 void generate_blocks(Game *game);
 void init_snake(Game *game);
-void memzero(byte *mem, size_t size);
+void memzero(uint8_t *mem, size_t size);
 
 void game_init(Game *game) {
-    memzero((byte*) game, sizeof(Game));
+    memzero((uint8_t*) game, sizeof(Game));
 }
 
 void game_prepare_level(Game *game) {
-    memzero((byte*) &(game->field), sizeof(Field));
+    memzero((uint8_t*) &(game->field), sizeof(Field));
     generate_blocks(game);
     init_snake(game);
     generate_food(game);
@@ -87,13 +95,13 @@ bool is_next_snake_point_allowed(Game *game, Point point) {
 Point get_next_point(Point point, DIRECTION direction) {
     switch (direction) {
         case DIRECTION_LEFT:
-            return POINT(((byte) (point.x - 1)) % FIELD_WIDTH, point.y);
+            return POINT((uint8_t) (((uint8_t) (point.x - 1)) % FIELD_WIDTH), point.y);
         case DIRECTION_RIGHT:
-            return POINT(((byte) (point.x + 1)) % FIELD_WIDTH, point.y);
+            return POINT((uint8_t) (((uint8_t) (point.x + 1)) % FIELD_WIDTH), point.y);
         case DIRECTION_UP:
-            return POINT(point.x, ((byte) (point.y - 1)) % FIELD_HEIGHT);
+            return POINT(point.x, (uint8_t) (((uint8_t) (point.y - 1)) % FIELD_HEIGHT));
         case DIRECTION_DOWN:
-            return POINT(point.x, ((byte) (point.y + 1)) % FIELD_HEIGHT);
+            return POINT(point.x, (uint8_t) (((uint8_t) (point.y + 1)) % FIELD_HEIGHT));
     }
 
     return point;
@@ -204,7 +212,7 @@ void init_snake(Game *game) {
 /**
  * Fill memory block by zeros.
  */
-void memzero(byte *mem, size_t size) {
+void memzero(uint8_t *mem, size_t size) {
     while (size-- > 0)
         *mem++ = 0;
 }

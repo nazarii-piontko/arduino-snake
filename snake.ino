@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "game.h"
 
 const byte LED_PIN_DATA = 12;

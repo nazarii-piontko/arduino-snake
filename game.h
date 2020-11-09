@@ -1,10 +1,24 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Arduino.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+#if defined(__EMSCRIPTEN__)
+
+const int FIELD_WIDTH = 64;
+const int FIELD_HEIGHT = 64;
+
+#elif defined(__AVR__)
 
 const int FIELD_WIDTH = 32;
 const int FIELD_HEIGHT = 8;
+
+#else
+
+#error Unsupported platform.
+
+#endif
 
 /**
  * Game field cell type.
@@ -41,14 +55,14 @@ typedef struct Point {
     /**
      * X-coordinate: [0..FIELD_WIDTH].
      */
-    byte x;
+    uint8_t x;
     /**
      * Y-coordinate: [0..FIELD_HEIGHT].
      */
-    byte y;
+    uint8_t y;
 } Point;
 
-#define POINT(x, y) ((Point) {(byte) x, (byte) y})
+#define POINT(x, y) ((Point) {(uint8_t) x, (uint8_t) y})
 
 #define POINT_IS_EQUAL(p1, p2) (p1.x == p2.x && p1.y == p2.y)
 
@@ -68,7 +82,7 @@ typedef struct Snake {
  *  2 bits - next cell direction, one of DIRECTION value.
  *  The first snake cell contains direction for future step.
  */
-typedef byte Cell;
+typedef uint8_t Cell;
 
 #define GAME_CELL_MAKE_EMPTY ((Cell) CELL_TYPE_EMPTY)
 #define GAME_CELL_MAKE_SNAKE(next_direction) ((Cell) (CELL_TYPE_SNAKE | ((next_direction) << 2)))
