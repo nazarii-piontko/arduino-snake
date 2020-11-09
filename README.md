@@ -9,6 +9,6 @@
 ![Demo](demo.gif)
 
 ## WASM version
-There is WASM hosted version of the game under [wast-test/](wast-test/) folder.
+There is WASM hosted version of the game under _wast-test/_ folder.
 
 The online version is accessible under: https://nazarii-piontko.github.io/arduino-snake/
